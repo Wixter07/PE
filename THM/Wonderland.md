@@ -318,6 +318,46 @@ Sorry, try again.
 rabbit@wonderland:~$ whoami
 rabbit
 ```
+Moving forward 
 
+```bash
+rabbit@wonderland:/home/rabbit$ ls
+teaParty
+rabbit@wonderland:/home/rabbit$ file teaParty 
+teaParty: setuid, setgid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=75a832557e341d3f65157c22fafd6d6ed7413474, not stripped
+rabbit@wonderland:/home/rabbit$ ./teaParty 
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by Wed, 13 Nov 2024 20:59:24 +0000
+Ask very nicely, and I will give you some tea while you wait for him
+
+Segmentation fault (core dumped)
+```
+
+b64 that binary to local and decompiled with IDA.
+
+![image](https://github.com/user-attachments/assets/5dd24f1a-5bde-4236-bdc7-443a5e732f2f)
+
+```bash
+rabbit@wonderland:/home/rabbit$ ltrace ./teaParty 
+setuid(1003)                                     = -1
+setgid(1003)                                     = -1
+puts("Welcome to the tea party!\nThe Ma"...Welcome to the tea party!
+The Mad Hatter will be here soon.
+)     = 60
+system("/bin/echo -n 'Probably by ' && d"...Probably by Wed, 13 Nov 2024 21:10:05 +0000
+ <no return ...>
+--- SIGCHLD (Child exited) ---
+<... system resumed> )                           = 0
+puts("Ask very nicely, and I will give"...Ask very nicely, and I will give you some tea while you wait for him
+)      = 69
+getchar(1, 0x55726f15f260, 0x7f8d635518c0, 0x7f8d63274154
+) = 10
+puts("Segmentation fault (core dumped)"...Segmentation fault (core dumped)
+)      = 33
++++ exited (status 33) +++
+```
+
+Hmm, custom date? setuid of hatter is 1003 though. Not sure what is up but let's try custom date only.
 
 
