@@ -10,3 +10,5 @@ gobuster dir -u "target_service_url" -w wordlist.txt
 ```bash
 ffuf -u target_service_url/FUZZ -w wordlist.txt
 ```
+# linpeas
+https://linpeas.sh/
