@@ -117,3 +117,189 @@ On inspecting, we can see where alice_door.png that we weren't able to access is
 
 
 Pretty sure ```alice:HowDothTheLittleCrocodileImproveHisShiningTail``` are credentials for the ssh. Time to do it
+
+And we are in
+
+![image](https://github.com/user-attachments/assets/e6d8a329-6452-4e84-8fb4-42bd3cad6720)
+
+
+# Privilege Escalation
+
+Initial analysis
+
+```bash
+alice@wonderland:~$ ls
+root.txt  walrus_and_the_carpenter.py
+alice@wonderland:~$ id
+uid=1001(alice) gid=1001(alice) groups=1001(alice)
+alice@wonderland:~$ pwd
+/home/alice
+alice@wonderland:~$ sudo -l
+[sudo] password for alice:
+Matching Defaults entries for alice on wonderland:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User alice may run the following commands on wonderland:
+    (rabbit) /usr/bin/python3.6 /home/alice/walrus_and_the_carpenter.py
+alice@wonderland:~$ cd ..
+alice@wonderland:/home$ ls
+alice  hatter  rabbit  tryhackme
+alice@wonderland:/home$ cd hatter
+-bash: cd: hatter: Permission denied
+alice@wonderland:/home$ cd rabbit
+-bash: cd: rabbit: Permission denied
+```
+
+Now sadly, the ssh on vm dies for some reason so moved to the attackbox. The python file had this 
+
+
+```py
+alice@wonderland:~$ cat walrus_and_the_carpenter.py 
+import random
+poem = """The sun was shining on the sea,
+Shining with all his might:
+He did his very best to make
+The billows smooth and bright \u2014
+And this was odd, because it was
+The middle of the night.
+
+The moon was shining sulkily,
+Because she thought the sun
+Had got no business to be there
+After the day was done \u2014
+"It\u2019s very rude of him," she said,
+"To come and spoil the fun!"
+
+The sea was wet as wet could be,
+The sands were dry as dry.
+You could not see a cloud, because
+No cloud was in the sky:
+No birds were flying over head \u2014
+There were no birds to fly.
+
+The Walrus and the Carpenter
+Were walking close at hand;
+They wept like anything to see
+Such quantities of sand:
+"If this were only cleared away,"
+They said, "it would be grand!"
+
+"If seven maids with seven mops
+Swept it for half a year,
+Do you suppose," the Walrus said,
+"That they could get it clear?"
+"I doubt it," said the Carpenter,
+And shed a bitter tear.
+
+"O Oysters, come and walk with us!"
+The Walrus did beseech.
+"A pleasant walk, a pleasant talk,
+Along the briny beach:
+We cannot do with more than four,
+To give a hand to each."
+
+The eldest Oyster looked at him.
+But never a word he said:
+The eldest Oyster winked his eye,
+And shook his heavy head \u2014
+Meaning to say he did not choose
+To leave the oyster-bed.
+
+But four young oysters hurried up,
+All eager for the treat:
+Their coats were brushed, their faces washed,
+Their shoes were clean and neat \u2014
+And this was odd, because, you know,
+They hadn\u2019t any feet.
+
+Four other Oysters followed them,
+And yet another four;
+And thick and fast they came at last,
+And more, and more, and more \u2014
+All hopping through the frothy waves,
+And scrambling to the shore.
+
+The Walrus and the Carpenter
+Walked on a mile or so,
+And then they rested on a rock
+Conveniently low:
+And all the little Oysters stood
+And waited in a row.
+
+"The time has come," the Walrus said,
+"To talk of many things:
+Of shoes \u2014 and ships \u2014 and sealing-wax \u2014
+Of cabbages \u2014 and kings \u2014
+And why the sea is boiling hot \u2014
+And whether pigs have wings."
+
+"But wait a bit," the Oysters cried,
+"Before we have our chat;
+For some of us are out of breath,
+And all of us are fat!"
+"No hurry!" said the Carpenter.
+They thanked him much for that.
+
+"A loaf of bread," the Walrus said,
+"Is what we chiefly need:
+Pepper and vinegar besides
+Are very good indeed \u2014
+Now if you\u2019re ready Oysters dear,
+We can begin to feed."
+
+"But not on us!" the Oysters cried,
+Turning a little blue,
+"After such kindness, that would be
+A dismal thing to do!"
+"The night is fine," the Walrus said
+"Do you admire the view?
+
+"It was so kind of you to come!
+And you are very nice!"
+The Carpenter said nothing but
+"Cut us another slice:
+I wish you were not quite so deaf \u2014
+I\u2019ve had to ask you twice!"
+
+"It seems a shame," the Walrus said,
+"To play them such a trick,
+After we\u2019ve brought them out so far,
+And made them trot so quick!"
+The Carpenter said nothing but
+"The butter\u2019s spread too thick!"
+
+"I weep for you," the Walrus said.
+"I deeply sympathize."
+With sobs and tears he sorted out
+Those of the largest size.
+Holding his pocket handkerchief
+Before his streaming eyes.
+
+"O Oysters," said the Carpenter.
+"You\u2019ve had a pleasant run!
+Shall we be trotting home again?"
+But answer came there none \u2014
+And that was scarcely odd, because
+They\u2019d eaten every one."""
+
+for i in range(10):
+    line = random.choice(poem.split("\n"))
+    print("The line was:\t", line)
+```
+
+
+Ater a bit of playing around, got the first flag
+
+```bash
+alice@wonderland:/$ ls
+bin    dev   initrd.img      lib64       mnt   root  srv       tmp  vmlinuz
+boot   etc   initrd.img.old  lost+found  opt   run   swap.img  usr  vmlinuz.old
+cdrom  home  lib             media       proc  sbin  sys       var
+alice@wonderland:/$ find user.txt
+find: \u2018user.txt\u2019: No such file or directory
+alice@wonderland:/$ cd root
+alice@wonderland:/root$ cat user.txt
+thm{"Curiouser and curiouser!"}
+alice@wonderland:/root$ 
+```
