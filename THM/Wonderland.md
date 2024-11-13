@@ -77,4 +77,43 @@ Wasn't able to access the other two images directly so wget it.
 Hmm hmm hmm. Nothing in the image tbh. I'll run gobuster with big.txt lmao.
 
 
+# Reattempt
 
+Dang so recursive directory bruting it is. Didn't figure out a way to get it to work on ffuf or gobuster but found Dirbuster and configured and my my my, what a beauty.
+
+
+![image](https://github.com/user-attachments/assets/25eaa1ee-32e9-4b80-ac88-cfea63088f44)
+
+
+Though the bruting dies after *r/a/b/b/i/" but pretty guessable that its rabbit. And there it is 
+
+![image](https://github.com/user-attachments/assets/37b821a5-47f1-4935-8ead-ff130482650f)
+
+And we are cooking
+
+![image](https://github.com/user-attachments/assets/0995836e-b4d4-44ca-b5a1-27800eda8df9)
+
+On inspecting, we can see where alice_door.png that we weren't able to access is visible.
+
+```html
+<!DOCTYPE html>
+
+<head>
+    <title>Enter wonderland</title>
+    <link rel="stylesheet" type="text/css" href="/main.css">
+</head>
+
+<body>
+    <h1>Open the door and enter wonderland</h1>
+    <p>"Oh, you’re sure to do that," said the Cat, "if you only walk long enough."</p>
+    <p>Alice felt that this could not be denied, so she tried another question. "What sort of people live about here?"
+    </p>
+    <p>"In that direction,"" the Cat said, waving its right paw round, "lives a Hatter: and in that direction," waving
+        the other paw, "lives a March Hare. Visit either you like: they’re both mad."</p>
+    <p style="display: none;">alice:HowDothTheLittleCrocodileImproveHisShiningTail</p>
+    <img src="/img/alice_door.png" style="height: 50rem;">
+</body>
+```
+
+
+Pretty sure ```alice:HowDothTheLittleCrocodileImproveHisShiningTail``` are credentials for the ssh. Time to do it
